@@ -437,6 +437,8 @@ a {
 
 .summary.is-first {
   margin-top: 20px;
+  padding-top: 0;
+  border-top: 0;
 }
 
 .summary-list dd.is-id {
