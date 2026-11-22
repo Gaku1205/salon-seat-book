@@ -165,9 +165,17 @@ export default async function Reserve({ searchParams }: Props) {
                 {formatDate(date)} {formatTime(time)}〜
               </dd>
             </dl>
-            <span className="button is-off" aria-disabled="true">
+            <Link
+              href={`/reserve/confirm?${new URLSearchParams({
+                menu: menu.id,
+                staff: staff as string,
+                date,
+                time: timeParam(time),
+              }).toString()}`}
+              className="button"
+            >
               お名前・連絡先の入力へ
-            </span>
+            </Link>
             <p className="book-small">予約は無料です。お支払いはお店で</p>
           </section>
         )}

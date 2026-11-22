@@ -435,6 +435,107 @@ a {
   text-align: center;
 }
 
+.summary.is-first {
+  margin-top: 20px;
+}
+
+.summary-list dd.is-id {
+  font-size: 13px;
+  word-break: break-all;
+}
+
+/* お客さん情報の入力 */
+.form {
+  margin-top: 8px;
+}
+
+.field {
+  padding: 16px 0 4px;
+}
+
+.field-label {
+  display: block;
+  margin-bottom: 6px;
+  font-family: var(--font-mincho), serif;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.field-input {
+  display: block;
+  width: 100%;
+  min-height: 48px;
+  padding: 8px 4px;
+  color: var(--ink);
+  font-family: var(--font-hand), sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  background: var(--paper);
+  border: 0;
+  border-bottom: 2px solid var(--ink);
+  border-radius: 0;
+}
+
+.field-input:focus-visible {
+  outline: 2px solid var(--wood);
+  outline-offset: 2px;
+  background: var(--kinari);
+}
+
+.field-input[aria-invalid="true"] {
+  border-bottom-color: var(--ink);
+  background: var(--kinari);
+}
+
+.field-hint,
+.field-error {
+  margin: 6px 0 0;
+  font-size: 14px;
+}
+
+.field-error {
+  font-weight: 700;
+}
+
+.field-error::before {
+  content: "！";
+}
+
+.form .button {
+  width: 100%;
+  margin-top: 24px;
+  border: 0;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.form .button:disabled {
+  background: var(--hai);
+  cursor: wait;
+}
+
+.form .book-small {
+  text-align: center;
+}
+
+/* 選び直しなどの案内 */
+.notice {
+  margin-top: 20px;
+  padding: 16px;
+  background: var(--kinari);
+  border: 2px solid var(--wood);
+  border-radius: 4px;
+}
+
+.notice-text {
+  margin: 0 0 14px;
+  font-weight: 700;
+}
+
+.notice .button {
+  margin-top: 0;
+}
+
 @media (min-width: 720px) {
   .desk {
     padding: 56px 24px 80px;
