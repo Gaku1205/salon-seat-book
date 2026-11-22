@@ -513,6 +513,7 @@ a {
 
 .form .button:disabled {
   background: var(--hai);
+  color: var(--ink);
   cursor: wait;
 }
 
