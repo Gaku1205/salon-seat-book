@@ -15,6 +15,7 @@ import {
   startTimes,
 } from "./salon";
 import { addOneMonth, jstParts } from "./time";
+import { type DayClosures, isBlocked, NO_CLOSURES } from "./closures";
 
 export type Booking = {
   menuId: MenuId;
@@ -106,15 +107,19 @@ export type SlotQuery = {
   date: string;
   now: Date;
   bookings: readonly Booking[];
+  /** その日の休み・閉じた枠（無ければ閉じていない） */
+  closures?: DayClosures;
 };
 
 /** 空いた開始時刻の一覧（0時からの分） */
 export function availableStarts(q: SlotQuery): number[] {
   const menu = findMenu(q.menuId);
   if (!menu) return [];
+  const closures = q.closures ?? NO_CLOSURES;
   return startTimes().filter(
     (t) =>
       isBookableTime(q.date, t, q.now) &&
+      !isBlocked(closures, menu, t) &&
       assign(menu, q.staff, q.date, t, q.bookings) !== undefined,
   );
 }

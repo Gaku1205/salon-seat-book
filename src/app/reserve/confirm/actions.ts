@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { getBookingStore } from "@/lib/booking-store";
+import { getClosureStore } from "@/lib/closures";
 import { type CustomerErrors, validateCustomer } from "@/lib/customer";
 import { parseSelection, reserve } from "@/lib/reserve";
 
@@ -30,7 +31,7 @@ export async function confirmReservation(_prev: ConfirmState, formData: FormData
   const checked = validateCustomer(values);
   if (!checked.ok) return { status: "invalid", errors: checked.errors, values };
 
-  const result = await reserve(getBookingStore(), sel, checked.customer);
+  const result = await reserve(getBookingStore(), sel, checked.customer, new Date(), getClosureStore());
   if (result.status === "full") return { status: "full", errors: {}, values };
   redirect(`/reserve/done?id=${encodeURIComponent(result.booking.id)}`);
 }

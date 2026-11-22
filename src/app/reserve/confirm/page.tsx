@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ConfirmForm } from "@/components/ConfirmForm";
 import { getBookingStore } from "@/lib/booking-store";
+import { getClosureStore } from "@/lib/closures";
 import { findAssignment, parseSelection } from "@/lib/reserve";
 import { findStaff, SHOP_NAME } from "@/lib/salon";
 import { formatDate, formatTime, timeParam } from "@/lib/time";
@@ -19,7 +20,7 @@ export default async function Confirm({ searchParams }: Props) {
     date: one(query.date),
     time: one(query.time),
   });
-  const open = sel ? await findAssignment(getBookingStore(), sel, new Date()) : undefined;
+  const open = sel ? await findAssignment(getBookingStore(), sel, new Date(), getClosureStore()) : undefined;
 
   const backParams = new URLSearchParams();
   for (const key of ["menu", "staff", "date", "time"] as const) {

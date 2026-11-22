@@ -1,5 +1,6 @@
 // 予約の確定（docs/spec.md「予約の確定」）。確定の直前にもう一度空きを確かめる。
 import type { BookingStore, StoredBooking } from "./booking-store";
+import { type ClosureStore, isBlocked } from "./closures";
 import type { Customer } from "./customer";
 import {
   findMenu,
@@ -36,32 +37,42 @@ export async function bookingsOn(store: BookingStore, date: string, now: Date): 
   return [...samples, ...(await store.listByDate(date))];
 }
 
-/** 今この枠に入れる担当と席。入れなければ undefined（締め切り・範囲外も含む） */
+/** 今この枠に入れる担当と席。入れなければ undefined（締め切り・範囲外・休み・閉じた時間も含む） */
 export async function findAssignment(
   store: BookingStore,
   sel: Selection,
   now: Date,
+  closures?: ClosureStore,
 ): Promise<{ staffId: StaffId; seatId: SeatId } | undefined> {
   if (!isBookableTime(sel.date, sel.start, now)) return undefined;
+  if (closures && isBlocked(await closures.dayOf(sel.date), sel.menu, sel.start)) return undefined;
   const bookings = await bookingsOn(store, sel.date, now);
   return assign(sel.menu, sel.staff, sel.date, sel.start, bookings);
+}
+
+// 確かめてから保存するまでの間に、別の確定や閉じる操作が割り込まないように順番に処理する
+let queue: Promise<unknown> = Promise.resolve();
+
+/** 予約の確定と、お店の閉じる操作を1つずつ順番に動かす */
+export function inOrder<T>(run: () => Promise<T>): Promise<T> {
+  const result = queue.then(run, run);
+  queue = result.catch(() => undefined);
+  return result;
 }
 
 export type ReserveResult =
   | { status: "ok"; booking: StoredBooking }
   | { status: "full" };
 
-// 確かめてから保存するまでの間に、別の確定が割り込まないように順番に処理する
-let queue: Promise<unknown> = Promise.resolve();
-
 export function reserve(
   store: BookingStore,
   sel: Selection,
   customer: Customer,
   now: Date = new Date(),
+  closures?: ClosureStore,
 ): Promise<ReserveResult> {
-  const run = async (): Promise<ReserveResult> => {
-    const found = await findAssignment(store, sel, now);
+  return inOrder(async (): Promise<ReserveResult> => {
+    const found = await findAssignment(store, sel, now, closures);
     if (!found) return { status: "full" };
     const booking = await store.save({
       menuId: sel.menu.id,
@@ -72,8 +83,5 @@ export function reserve(
       customer,
     });
     return { status: "ok", booking };
-  };
-  const result = queue.then(run, run);
-  queue = result.catch(() => undefined);
-  return result;
+  });
 }
