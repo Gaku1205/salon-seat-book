@@ -1,10 +1,470 @@
-body {
-  margin: 0;
-  font-family: system-ui, sans-serif;
+/* 色と文字は docs/design.md のものだけ */
+:root {
+  --wood: #c39461;
+  --paper: #ffffff;
+  --ink: #2a221d;
+  --kinari: #f0e2cc;
+  --hai: #e6e2dc;
+  --grain: rgba(42, 34, 29, 0.07);
+  --shadow: rgba(42, 34, 29, 0.25);
 }
 
-.container {
-  max-width: 720px;
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  color: var(--ink);
+  font-family: var(--font-gothic), sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  background-color: var(--wood);
+  background-image:
+    repeating-linear-gradient(
+      94deg,
+      transparent 0 9px,
+      var(--grain) 9px 11px,
+      transparent 11px 23px,
+      var(--grain) 23px 24px,
+      transparent 24px 41px
+    ),
+    repeating-linear-gradient(
+      88deg,
+      transparent 0 140px,
+      var(--grain) 140px 190px,
+      transparent 190px 330px
+    );
+  min-height: 100vh;
+}
+
+a {
+  color: inherit;
+}
+
+/* 木の台 */
+.desk {
+  padding: 28px 12px 56px;
+}
+
+/* 白い帳面 */
+.book {
+  position: relative;
+  max-width: 880px;
   margin: 0 auto;
-  padding: 48px 20px;
+  padding: 28px 16px 32px 30px;
+  background: var(--paper);
+  border-radius: 4px;
+  box-shadow: 0 12px 30px var(--shadow);
+}
+
+.book.is-narrow {
+  max-width: 640px;
+}
+
+/* 綴じ穴 */
+.book::before {
+  content: "";
+  position: absolute;
+  top: 24px;
+  bottom: 24px;
+  left: 10px;
+  width: 8px;
+  background: radial-gradient(circle at 4px 4px, var(--ink) 4px, transparent 4.5px) 0 0 / 8px 56px repeat-y;
+}
+
+.book-head {
+  text-align: center;
+  padding-bottom: 20px;
+  border-bottom: 2px solid var(--ink);
+}
+
+.shop-name {
+  margin: 0;
+  font-family: var(--font-mincho), serif;
+  font-weight: 800;
+  font-size: 32px;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+}
+
+.shop-name.is-small {
+  display: inline-block;
+  font-size: 20px;
+  padding: 8px 4px;
+}
+
+.book-title {
+  margin: 6px 0 0;
+  font-family: var(--font-hand), sans-serif;
+  font-size: 15px;
+}
+
+.book-date {
+  margin: 0;
+  font-family: var(--font-mincho), serif;
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.day-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.day-turn {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0 6px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.day-turn.is-off {
+  color: var(--hai);
+}
+
+.book-note {
+  margin: 8px 0 0;
+  font-size: 14px;
+}
+
+.book-small {
+  margin: 10px 0 0;
+  font-size: 14px;
+}
+
+.book-foot {
+  margin-top: 24px;
+  text-align: center;
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  max-width: 360px;
+  margin: 0 auto;
+  padding: 0 24px;
+  background: var(--ink);
+  color: var(--paper);
+  font-weight: 700;
+  font-size: 17px;
+  border-radius: 4px;
+  text-decoration: none;
+}
+
+.button.is-off {
+  background: var(--hai);
+  color: var(--ink);
+  cursor: not-allowed;
+}
+
+/* 予約帳の表 */
+.ledger {
+  display: grid;
+  grid-template-columns: 48px repeat(4, minmax(0, 1fr));
+  grid-auto-rows: 48px;
+  margin-top: 4px;
+}
+
+.ledger-seat {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mincho), serif;
+  font-weight: 700;
+  font-size: 17px;
+  border-bottom: 2px solid var(--ink);
+}
+
+.ledger-corner {
+  border-bottom: 2px solid var(--ink);
+}
+
+.ledger-time {
+  padding-right: 6px;
+  font-weight: 700;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  line-height: 1;
+  padding-top: 5px;
+}
+
+.ledger-cell {
+  border-top: 1px solid var(--hai);
+  border-left: 1px solid var(--hai);
+}
+
+.ledger-cell.is-hour {
+  border-top-color: var(--ink);
+}
+
+.ledger-cell.is-open:hover,
+.ledger-cell.is-open:focus-visible {
+  background: var(--kinari);
+}
+
+.ledger-cell.is-open:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: -2px;
+}
+
+.ledger-cell.is-closed {
+  background: repeating-linear-gradient(135deg, var(--paper) 0 6px, var(--hai) 6px 8px);
+}
+
+.ledger-booking {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 2px;
+  margin: 1px 0 0 1px;
+  background: var(--kinari);
+  border-top: 1px solid var(--ink);
+  font-family: var(--font-hand), sans-serif;
+  text-align: center;
+  overflow: hidden;
+}
+
+.ledger-name {
+  font-weight: 600;
+  font-size: 13px;
+  white-space: nowrap;
+  line-height: 1.3;
+  transform: rotate(-2deg);
+}
+
+.ledger-menu {
+  font-size: 12px;
+  line-height: 1.3;
+  transform: rotate(-2deg);
+}
+
+.ledger-rest {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  font-size: 13px;
+  transform: translateY(-20%) rotate(-2deg);
+}
+
+/* 予約の選択 */
+.step {
+  padding: 22px 0 6px;
+}
+
+.step-title {
+  margin: 0 0 10px;
+  font-family: var(--font-mincho), serif;
+  font-weight: 700;
+  font-size: 22px;
+}
+
+.step-note {
+  margin: 0;
+  padding: 14px 0;
+  border-top: 1px solid var(--hai);
+  border-bottom: 1px solid var(--hai);
+}
+
+.choices {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--hai);
+}
+
+.choices li {
+  border-bottom: 1px solid var(--hai);
+}
+
+.choice {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  min-height: 56px;
+  padding: 14px 16px;
+  margin: 4px 0;
+  text-decoration: none;
+  border: 2px solid transparent;
+  border-radius: 999px;
+}
+
+.choice:hover {
+  background: var(--kinari);
+}
+
+.choice.is-picked {
+  background: var(--kinari);
+  border-color: var(--wood);
+}
+
+.choice-main {
+  font-weight: 700;
+  font-size: 18px;
+  white-space: nowrap;
+}
+
+.choice-main.is-hand {
+  font-family: var(--font-hand), sans-serif;
+  font-weight: 600;
+  font-size: 19px;
+}
+
+.choice-sub {
+  font-size: 14px;
+}
+
+.dates {
+  list-style: none;
+  display: flex;
+  gap: 6px;
+  margin: 0;
+  padding: 4px 2px 12px;
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+}
+
+.date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 56px;
+  padding: 8px 0;
+  text-decoration: none;
+  border: 2px solid var(--hai);
+  border-radius: 999px;
+  scroll-snap-align: start;
+  font-variant-numeric: tabular-nums;
+}
+
+.date:hover {
+  background: var(--kinari);
+}
+
+.date.is-picked {
+  background: var(--kinari);
+  border-color: var(--wood);
+}
+
+.date-month,
+.date-week {
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.date-day {
+  font-family: var(--font-mincho), serif;
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+.times {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+}
+
+.time {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 52px;
+  font-weight: 700;
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+  text-decoration: none;
+  border: 2px solid var(--hai);
+  border-radius: 999px;
+}
+
+.time:hover {
+  background: var(--kinari);
+}
+
+.time.is-picked {
+  background: var(--kinari);
+  border-color: var(--wood);
+  font-family: var(--font-hand), sans-serif;
+  font-weight: 600;
+}
+
+.summary {
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 2px solid var(--ink);
+}
+
+.summary-list {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 6px 16px;
+  margin: 0 0 18px;
+}
+
+.summary-list dt {
+  font-size: 14px;
+}
+
+.summary-list dd {
+  margin: 0;
+  font-family: var(--font-hand), sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.summary .book-small {
+  text-align: center;
+}
+
+@media (min-width: 720px) {
+  .desk {
+    padding: 56px 24px 80px;
+  }
+
+  .book {
+    padding: 44px 48px 44px 60px;
+  }
+
+  .book::before {
+    left: 22px;
+  }
+
+  .shop-name {
+    font-size: 44px;
+  }
+
+  .book-date {
+    font-size: 30px;
+  }
+
+  .ledger-name {
+    font-size: 15px;
+  }
+
+  .ledger {
+    grid-template-columns: 56px repeat(4, minmax(0, 1fr));
+  }
+
+  .times {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
 }
