@@ -539,6 +539,114 @@ a {
   margin-top: 0;
 }
 
+/* お店の予約帳 */
+.ledger-cell.is-shut {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.ledger-shut {
+  font-family: var(--font-hand), sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1;
+  transform: rotate(-2deg);
+}
+
+.ledger-cell.is-closed.is-open:hover,
+.ledger-cell.is-closed.is-open:focus-visible,
+.ledger-cell.is-picked {
+  background: var(--kinari);
+}
+
+.ledger-cell.is-picked {
+  box-shadow: inset 0 0 0 2px var(--wood);
+}
+
+.shop-holiday {
+  display: inline-block;
+  margin: 12px 0 0;
+  padding: 2px 16px;
+  font-family: var(--font-hand), sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  border: 2px solid var(--wood);
+  border-radius: 999px;
+}
+
+.shop-day {
+  margin-top: 12px;
+}
+
+.shop-day-button {
+  min-height: 48px;
+  padding: 0 20px;
+  background: var(--paper);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: 4px;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.shop-day-button:hover,
+.shop-day-button:focus-visible {
+  background: var(--kinari);
+}
+
+.shop-error {
+  margin: 14px 0 0;
+  font-weight: 700;
+  text-align: left;
+}
+
+.shop-error::before {
+  content: "！";
+}
+
+.shop-bar {
+  position: sticky;
+  bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  padding: 10px 12px;
+  background: var(--kinari);
+  border: 2px solid var(--wood);
+  border-radius: 4px;
+}
+
+.shop-bar-time {
+  font-weight: 700;
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+}
+
+.shop-bar .shop-bar-button {
+  flex: 1;
+  min-height: 48px;
+  margin: 0;
+  padding: 0 12px;
+  border: 0;
+  font-family: inherit;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.shop-bar-cancel {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0 4px;
+  font-weight: 700;
+  font-size: 15px;
+}
+
 @media (min-width: 720px) {
   .desk {
     padding: 56px 24px 80px;

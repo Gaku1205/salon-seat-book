@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { findMenu, findStaff, isStaffChoice, MENUS, SHOP_NAME, STAFF, type StaffChoice } from "@/lib/salon";
-import { sampleBookings } from "@/lib/sampleBookings";
+import { getBookingStore } from "@/lib/booking-store";
+import { getClosureStore } from "@/lib/closures";
+import { bookingsOn } from "@/lib/reserve";
 import { availableStarts } from "@/lib/slots";
 import { bookableDates, formatDate, formatTime, isDateString, jstParts, parseTime, timeParam, weekday } from "@/lib/time";
 
@@ -36,7 +38,14 @@ export default async function Reserve({ searchParams }: Props) {
 
   const starts =
     menu && staff && date
-      ? availableStarts({ menuId: menu.id, staff, date, now, bookings: sampleBookings(today) })
+      ? availableStarts({
+          menuId: menu.id,
+          staff,
+          date,
+          now,
+          bookings: await bookingsOn(getBookingStore(), date, now),
+          closures: await getClosureStore().dayOf(date),
+        })
       : [];
   const asked = parseTime(one(query.time));
   // 時刻は、メニュー・担当・日付がそろって、空いているときだけ選んだことにする

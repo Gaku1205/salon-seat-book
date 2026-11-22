@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { Ledger } from "@/components/Ledger";
 import { SHOP_NAME } from "@/lib/salon";
-import { sampleBookings } from "@/lib/sampleBookings";
+import { getBookingStore } from "@/lib/booking-store";
+import { getClosureStore } from "@/lib/closures";
+import { bookingsOn } from "@/lib/reserve";
 import { addDays, addOneMonth, formatDate, isDateString, jstParts } from "@/lib/time";
 
 type Props = { searchParams: Promise<Record<string, string | string[] | undefined>> };
@@ -42,7 +44,12 @@ export default async function Home({ searchParams }: Props) {
           <p className="book-note">空いた枡を押すと、その時間から予約できます</p>
         </header>
 
-        <Ledger date={date} now={now} bookings={sampleBookings(today)} />
+        <Ledger
+          date={date}
+          now={now}
+          bookings={await bookingsOn(getBookingStore(), date, now)}
+          closures={await getClosureStore().dayOf(date)}
+        />
 
         <footer className="book-foot">
           <Link href="/reserve" className="button">
